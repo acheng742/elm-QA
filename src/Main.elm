@@ -6,7 +6,16 @@ import Html.Events exposing (onClick)
 
 
 main =
-    Browser.sandbox { init = 6, update = update, view = view }
+    Browser.sandbox { init = init, update = update, view = view }
+
+
+type alias Model =
+    { count : Int }
+
+
+init : Model
+init =
+    Model 6
 
 
 type Msg
@@ -14,18 +23,27 @@ type Msg
     | Decrement
 
 
+update : Msg -> Model -> Model
 update msg model =
     case msg of
         Increment ->
-            model + 1
+            let
+                newModel =
+                    { model | count = model.count + 1 }
+            in
+            newModel
 
         Decrement ->
-            model - 1
+            let
+                newModel =
+                    { model | count = model.count - 1 }
+            in
+            newModel
 
 
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
-        , div [] [ text (String.fromInt model) ]
+        , div [] [ text (String.fromInt model.count) ]
         , button [ onClick Increment ] [ text "+" ]
         ]
