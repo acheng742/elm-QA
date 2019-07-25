@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.as,
-		impl.aA,
-		impl.ay,
+		impl.at,
+		impl.aB,
+		impl.az,
 		function() { return function() {} }
 	);
 });
@@ -3883,11 +3883,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.as,
-		impl.aA,
-		impl.ay,
+		impl.at,
+		impl.aB,
+		impl.az,
 		function(sendToApp, initialModel) {
-			var view = impl.aC;
+			var view = impl.aD;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3919,12 +3919,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.as,
-		impl.aA,
-		impl.ay,
+		impl.at,
+		impl.aB,
+		impl.az,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.B && impl.B(sendToApp)
-			var view = impl.aC;
+			var view = impl.aD;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3932,12 +3932,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.al);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.am);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.az) && (_VirtualDom_doc.title = title = doc.az);
+				(title !== doc.aA) && (_VirtualDom_doc.title = title = doc.aA);
 			});
 		}
 	);
@@ -3993,8 +3993,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.au;
-	var onUrlRequest = impl.av;
+	var onUrlChange = impl.av;
+	var onUrlRequest = impl.aw;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4014,9 +4014,9 @@ function _Browser_application(impl)
 					var next = elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.ab === next.ab
-							&& curr.T === next.T
-							&& curr.Z.a === next.Z.a
+							&& curr.ac === next.ac
+							&& curr.U === next.U
+							&& curr._.a === next._.a
 						)
 							? elm$browser$Browser$Internal(next)
 							: elm$browser$Browser$External(href)
@@ -4024,13 +4024,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		as: function(flags)
+		at: function(flags)
 		{
-			return A3(impl.as, flags, _Browser_getUrl(), key);
+			return A3(impl.at, flags, _Browser_getUrl(), key);
 		},
-		aC: impl.aC,
-		aA: impl.aA,
-		ay: impl.ay
+		aD: impl.aD,
+		aB: impl.aB,
+		az: impl.az
 	});
 }
 
@@ -4096,17 +4096,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aq: 'hidden', am: 'visibilitychange' }
+		? { ar: 'hidden', an: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aq: 'mozHidden', am: 'mozvisibilitychange' }
+		? { ar: 'mozHidden', an: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aq: 'msHidden', am: 'msvisibilitychange' }
+		? { ar: 'msHidden', an: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aq: 'webkitHidden', am: 'webkitvisibilitychange' }
-		: { aq: 'hidden', am: 'visibilitychange' };
+		? { ar: 'webkitHidden', an: 'webkitvisibilitychange' }
+		: { ar: 'hidden', an: 'visibilitychange' };
 }
 
 
@@ -4187,8 +4187,8 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		af: _Browser_getScene(),
-		ai: {
+		ag: _Browser_getScene(),
+		aj: {
 			G: _Browser_window.pageXOffset,
 			H: _Browser_window.pageYOffset,
 			y: _Browser_doc.documentElement.clientWidth,
@@ -4226,11 +4226,11 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			af: {
+			ag: {
 				y: node.scrollWidth,
 				t: node.scrollHeight
 			},
-			ai: {
+			aj: {
 				G: node.scrollLeft,
 				H: node.scrollTop,
 				y: node.clientWidth,
@@ -4264,14 +4264,14 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			af: _Browser_getScene(),
-			ai: {
+			ag: _Browser_getScene(),
+			aj: {
 				G: x,
 				H: y,
 				y: _Browser_doc.documentElement.clientWidth,
 				t: _Browser_doc.documentElement.clientHeight
 			},
-			an: {
+			ao: {
 				G: x + rect.left,
 				H: y + rect.top,
 				y: rect.width,
@@ -4310,10 +4310,11 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$Model = function (count) {
-	return {r: count};
-};
-var author$project$Main$init = author$project$Main$Model(6);
+var author$project$Main$Model = F2(
+	function (count, firstName) {
+		return {r: count, S: firstName};
+	});
+var author$project$Main$init = A2(author$project$Main$Model, 6, 'name');
 var elm$core$Basics$EQ = 1;
 var elm$core$Basics$GT = 2;
 var elm$core$Basics$LT = 0;
@@ -4825,8 +4826,18 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 };
 var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$input = _VirtualDom_node('input');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
@@ -4877,6 +4888,20 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						elm$html$Html$text('+')
+					])),
+				A2(
+				elm$html$Html$input,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$value(model.S)
+					]),
+				_List_Nil),
+				A2(
+				elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text('hello')
 					]))
 			]));
 };
@@ -5069,7 +5094,7 @@ var elm$core$String$contains = _String_contains;
 var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {S: fragment, T: host, X: path, Z: port_, ab: protocol, ac: query};
+		return {T: fragment, U: host, Y: path, _: port_, ac: protocol, ad: query};
 	});
 var elm$url$Url$chompBeforePath = F5(
 	function (protocol, path, params, frag, str) {
@@ -5176,22 +5201,22 @@ var elm$url$Url$fromString = function (str) {
 var elm$browser$Browser$sandbox = function (impl) {
 	return _Browser_element(
 		{
-			as: function (_n0) {
-				return _Utils_Tuple2(impl.as, elm$core$Platform$Cmd$none);
+			at: function (_n0) {
+				return _Utils_Tuple2(impl.at, elm$core$Platform$Cmd$none);
 			},
-			ay: function (_n1) {
+			az: function (_n1) {
 				return elm$core$Platform$Sub$none;
 			},
-			aA: F2(
+			aB: F2(
 				function (msg, model) {
 					return _Utils_Tuple2(
-						A2(impl.aA, msg, model),
+						A2(impl.aB, msg, model),
 						elm$core$Platform$Cmd$none);
 				}),
-			aC: impl.aC
+			aD: impl.aD
 		});
 };
 var author$project$Main$main = elm$browser$Browser$sandbox(
-	{as: author$project$Main$init, aA: author$project$Main$update, aC: author$project$Main$view});
+	{at: author$project$Main$init, aB: author$project$Main$update, aD: author$project$Main$view});
 _Platform_export({'Main':{'init':author$project$Main$main(
 	elm$json$Json$Decode$succeed(0))(0)}});}(this));

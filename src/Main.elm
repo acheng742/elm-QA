@@ -1,8 +1,9 @@
 module Main exposing (Msg(..), main, update, view)
 
 import Browser
-import Html exposing (Html, button, div, text)
-import Html.Events exposing (onClick)
+import Html exposing (Html, button, div, input, text)
+import Html.Attributes exposing (value)
+import Html.Events exposing (onClick, onInput)
 
 
 main =
@@ -10,17 +11,20 @@ main =
 
 
 type alias Model =
-    { count : Int }
+    { count : Int
+    , firstName : String
+    }
 
 
 init : Model
 init =
-    Model 6
+    Model 6 "name"
 
 
 type Msg
     = Increment
     | Decrement
+    | FirstName String
 
 
 update : Msg -> Model -> Model
@@ -40,10 +44,20 @@ update msg model =
             in
             newModel
 
+        FirstName input ->
+            let
+                updatedModel =
+                    { model | firstName = input }
+            in
+            updatedModel
 
+
+view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
         , div [] [ text (String.fromInt model.count) ]
         , button [ onClick Increment ] [ text "+" ]
+        , input [ value model.firstName, onInput FirstName ] []
+        , div [] [ text model.firstName ]
         ]
