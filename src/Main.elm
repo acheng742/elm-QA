@@ -1,7 +1,7 @@
 module Main exposing (Msg(..), main, update, view)
 
 import Browser
-import Html exposing (Html, button, div, input, text)
+import Html exposing (Html, button, div, input, li, p, text, ul)
 import Html.Attributes exposing (value)
 import Html.Events exposing (onClick, onInput)
 
@@ -14,6 +14,14 @@ type alias Model =
     { count : Int
     , firstName : String
     }
+
+
+type alias SomeNumber =
+    Int
+
+
+type SomeOtherNumber
+    = OtherNumber Int
 
 
 init : Model
@@ -60,4 +68,10 @@ view model =
         , button [ onClick Increment ] [ text "+" ]
         , input [ value model.firstName, onInput FirstName ] []
         , div [] [ text model.firstName ]
+        , div []
+            [ p [] [ text "Please choose an answer" ]
+            , ul []
+                [ li [] [ text "Answer 1" ]
+                ]
+            ]
         ]
