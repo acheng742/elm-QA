@@ -13,20 +13,30 @@ main =
 type alias Model =
     { count : Int
     , firstName : String
+    , questions : List QuestionAnswer
     }
 
 
-type alias SomeNumber =
-    Int
-
-
-type SomeOtherNumber
-    = OtherNumber Int
+type alias QuestionAnswer =
+    { question : String
+    , choices : List String
+    }
 
 
 init : Model
 init =
-    Model 0 "name"
+    Model 0 "name" initialQuestionAnswer
+
+
+initialQuestionAnswer : List QuestionAnswer
+initialQuestionAnswer =
+    [ { question = "What is your favorite color?"
+      , choices = [ "Blue", "Yellow", "Red", "Purple" ]
+      }
+    , { question = "What is your favorite food?"
+      , choices = [ "Hamburgers", "Chili", "Pizza" ]
+      }
+    ]
 
 
 type Msg
@@ -63,17 +73,29 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class "container mt-3" ]
-        [ button [ class "btn btn-secondary", onClick Decrement ] [ text "-" ]
-        , div [] [ text (String.fromInt model.count) ]
-        , button [ class "btn btn-secondary", onClick Increment ] [ text "+" ]
-        , input [ class "list-group mt-3", value model.firstName, onInput FirstName ] []
-        , div [] [ text model.firstName ]
-        , div []
-            [ p [ class "mt-3" ] [ text "What's your favorite color? Please choose an answer" ]
-            , ul [ class "list-group" ]
-                [ li [] [ text "Blue" ]
-                , li [] [ text "Yellow" ]
-                , li [] [ text "Red" ]
-                ]
-            ]
+        ([ button [ class "btn btn-secondary", onClick Decrement ] [ text "-" ]
+         , div [] [ text (String.fromInt model.count) ]
+         , button [ class "btn btn-secondary", onClick Increment ] [ text "+" ]
+         , input [ class "list-group mt-3", value model.firstName, onInput FirstName ] []
+         , div [] [ text model.firstName ]
+         ]
+            ++ List.map renderQuestion model.questions
+        )
+
+
+
+-- View Helpers
+
+
+renderQuestion : QuestionAnswer -> Html Msg
+renderQuestion questionAnswer =
+    div []
+        [ p [ class "mt-3" ] [ text questionAnswer.question ]
+        , ul [ class "list-group" ]
+            (List.map (\choice -> li [] [ text choice ]) questionAnswer.choices)
         ]
+
+
+renderChoice : String -> Html Msg
+renderChoice choice =
+    li [] [ text choice ]
