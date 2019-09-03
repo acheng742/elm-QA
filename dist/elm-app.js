@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.M.A === region.R.A)
+	if (region.cd.ai === region.ct.ai)
 	{
-		return 'on line ' + region.M.A;
+		return 'on line ' + region.cd.ai;
 	}
-	return 'on lines ' + region.M.A + ' through ' + region.R.A;
+	return 'on lines ' + region.cd.ai + ' through ' + region.ct.ai;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.at,
-		impl.aB,
-		impl.az,
+		impl.dh,
+		impl.dr,
+		impl.dp,
 		function() { return function() {} }
 	);
 });
@@ -2659,9 +2659,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		k: func(record.k),
-		N: record.N,
-		L: record.L
+		t: func(record.t),
+		cf: record.cf,
+		ca: record.ca
 	}
 });
 
@@ -2929,11 +2929,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.k;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.N;
+		var message = !tag ? value : tag < 3 ? value.a : value.t;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.cf;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.L) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.ca) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3883,11 +3883,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.at,
-		impl.aB,
-		impl.az,
+		impl.dh,
+		impl.dr,
+		impl.dp,
 		function(sendToApp, initialModel) {
-			var view = impl.aD;
+			var view = impl.dt;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3919,12 +3919,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.at,
-		impl.aB,
-		impl.az,
+		impl.dh,
+		impl.dr,
+		impl.dp,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.B && impl.B(sendToApp)
-			var view = impl.aD;
+			var divertHrefToApp = impl.an && impl.an(sendToApp)
+			var view = impl.dt;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3932,12 +3932,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.am);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.c6);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aA) && (_VirtualDom_doc.title = title = doc.aA);
+				(title !== doc.dq) && (_VirtualDom_doc.title = title = doc.dq);
 			});
 		}
 	);
@@ -3993,12 +3993,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.av;
-	var onUrlRequest = impl.aw;
+	var onUrlChange = impl.dk;
+	var onUrlRequest = impl.dl;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		B: function(sendToApp)
+		an: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4014,9 +4014,9 @@ function _Browser_application(impl)
 					var next = elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.ac === next.ac
-							&& curr.U === next.U
-							&& curr._.a === next._.a
+							&& curr.cP === next.cP
+							&& curr.cw === next.cw
+							&& curr.cL.a === next.cL.a
 						)
 							? elm$browser$Browser$Internal(next)
 							: elm$browser$Browser$External(href)
@@ -4024,13 +4024,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		at: function(flags)
+		dh: function(flags)
 		{
-			return A3(impl.at, flags, _Browser_getUrl(), key);
+			return A3(impl.dh, flags, _Browser_getUrl(), key);
 		},
-		aD: impl.aD,
-		aB: impl.aB,
-		az: impl.az
+		dt: impl.dt,
+		dr: impl.dr,
+		dp: impl.dp
 	});
 }
 
@@ -4096,17 +4096,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { ar: 'hidden', an: 'visibilitychange' }
+		? { de: 'hidden', c7: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { ar: 'mozHidden', an: 'mozvisibilitychange' }
+		? { de: 'mozHidden', c7: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { ar: 'msHidden', an: 'msvisibilitychange' }
+		? { de: 'msHidden', c7: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { ar: 'webkitHidden', an: 'webkitvisibilitychange' }
-		: { ar: 'hidden', an: 'visibilitychange' };
+		? { de: 'webkitHidden', c7: 'webkitvisibilitychange' }
+		: { de: 'hidden', c7: 'visibilitychange' };
 }
 
 
@@ -4187,12 +4187,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		ag: _Browser_getScene(),
-		aj: {
-			H: _Browser_window.pageXOffset,
-			I: _Browser_window.pageYOffset,
-			y: _Browser_doc.documentElement.clientWidth,
-			t: _Browser_doc.documentElement.clientHeight
+		cU: _Browser_getScene(),
+		c3: {
+			bU: _Browser_window.pageXOffset,
+			bV: _Browser_window.pageYOffset,
+			X: _Browser_doc.documentElement.clientWidth,
+			N: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4202,8 +4202,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		y: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		t: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		X: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		N: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4226,15 +4226,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			ag: {
-				y: node.scrollWidth,
-				t: node.scrollHeight
+			cU: {
+				X: node.scrollWidth,
+				N: node.scrollHeight
 			},
-			aj: {
-				H: node.scrollLeft,
-				I: node.scrollTop,
-				y: node.clientWidth,
-				t: node.clientHeight
+			c3: {
+				bU: node.scrollLeft,
+				bV: node.scrollTop,
+				X: node.clientWidth,
+				N: node.clientHeight
 			}
 		};
 	});
@@ -4264,18 +4264,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			ag: _Browser_getScene(),
-			aj: {
-				H: x,
-				I: y,
-				y: _Browser_doc.documentElement.clientWidth,
-				t: _Browser_doc.documentElement.clientHeight
+			cU: _Browser_getScene(),
+			c3: {
+				bU: x,
+				bV: y,
+				X: _Browser_doc.documentElement.clientWidth,
+				N: _Browser_doc.documentElement.clientHeight
 			},
-			ao: {
-				H: x + rect.left,
-				I: y + rect.top,
-				y: rect.width,
-				t: rect.height
+			da: {
+				bU: x + rect.left,
+				bV: y + rect.top,
+				X: rect.width,
+				N: rect.height
 			}
 		};
 	});
@@ -4312,9 +4312,9 @@ function _Browser_load(url)
 }
 var author$project$Main$Model = F2(
 	function (count, firstName) {
-		return {r: count, G: firstName};
+		return {K: count, aX: firstName};
 	});
-var author$project$Main$init = A2(author$project$Main$Model, 6, 'name');
+var author$project$Main$init = A2(author$project$Main$Model, 0, 'name');
 var elm$core$Basics$EQ = 1;
 var elm$core$Basics$GT = 2;
 var elm$core$Basics$LT = 0;
@@ -4403,18 +4403,18 @@ var author$project$Main$update = F2(
 			case 0:
 				var newModel = _Utils_update(
 					model,
-					{r: model.r + 1});
+					{K: model.K + 1});
 				return newModel;
 			case 1:
 				var newModel = _Utils_update(
 					model,
-					{r: model.r - 1});
+					{K: model.K - 1});
 				return newModel;
 			default:
 				var input = msg.a;
 				var updatedModel = _Utils_update(
 					model,
-					{G: input});
+					{aX: input});
 				return updatedModel;
 		}
 	});
@@ -4850,6 +4850,7 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			elm$json$Json$Encode$string(string));
 	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
@@ -4959,13 +4960,17 @@ var elm$html$Html$Events$onInput = function (tagger) {
 var author$project$Main$view = function (model) {
 	return A2(
 		elm$html$Html$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('container mt-3')
+			]),
 		_List_fromArray(
 			[
 				A2(
 				elm$html$Html$button,
 				_List_fromArray(
 					[
+						elm$html$Html$Attributes$class('btn btn-secondary'),
 						elm$html$Html$Events$onClick(author$project$Main$Decrement)
 					]),
 				_List_fromArray(
@@ -4978,12 +4983,13 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						elm$html$Html$text(
-						elm$core$String$fromInt(model.r))
+						elm$core$String$fromInt(model.K))
 					])),
 				A2(
 				elm$html$Html$button,
 				_List_fromArray(
 					[
+						elm$html$Html$Attributes$class('btn btn-secondary'),
 						elm$html$Html$Events$onClick(author$project$Main$Increment)
 					]),
 				_List_fromArray(
@@ -4994,7 +5000,8 @@ var author$project$Main$view = function (model) {
 				elm$html$Html$input,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$value(model.G),
+						elm$html$Html$Attributes$class('list-group mt-3'),
+						elm$html$Html$Attributes$value(model.aX),
 						elm$html$Html$Events$onInput(author$project$Main$FirstName)
 					]),
 				_List_Nil),
@@ -5003,7 +5010,7 @@ var author$project$Main$view = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						elm$html$Html$text(model.G)
+						elm$html$Html$text(model.aX)
 					])),
 				A2(
 				elm$html$Html$div,
@@ -5012,14 +5019,20 @@ var author$project$Main$view = function (model) {
 					[
 						A2(
 						elm$html$Html$p,
-						_List_Nil,
 						_List_fromArray(
 							[
-								elm$html$Html$text('Please choose an answer')
+								elm$html$Html$Attributes$class('mt-3')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('What\'s your favorite color? Please choose an answer')
 							])),
 						A2(
 						elm$html$Html$ul,
-						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('list-group')
+							]),
 						_List_fromArray(
 							[
 								A2(
@@ -5027,7 +5040,21 @@ var author$project$Main$view = function (model) {
 								_List_Nil,
 								_List_fromArray(
 									[
-										elm$html$Html$text('Answer 1')
+										elm$html$Html$text('Blue')
+									])),
+								A2(
+								elm$html$Html$li,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('Yellow')
+									])),
+								A2(
+								elm$html$Html$li,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('Red')
 									]))
 							]))
 					]))
@@ -5167,7 +5194,7 @@ var elm$core$String$contains = _String_contains;
 var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {T: fragment, U: host, Y: path, _: port_, ac: protocol, ad: query};
+		return {cv: fragment, cw: host, cJ: path, cL: port_, cP: protocol, cQ: query};
 	});
 var elm$url$Url$chompBeforePath = F5(
 	function (protocol, path, params, frag, str) {
@@ -5274,22 +5301,22 @@ var elm$url$Url$fromString = function (str) {
 var elm$browser$Browser$sandbox = function (impl) {
 	return _Browser_element(
 		{
-			at: function (_n0) {
-				return _Utils_Tuple2(impl.at, elm$core$Platform$Cmd$none);
+			dh: function (_n0) {
+				return _Utils_Tuple2(impl.dh, elm$core$Platform$Cmd$none);
 			},
-			az: function (_n1) {
+			dp: function (_n1) {
 				return elm$core$Platform$Sub$none;
 			},
-			aB: F2(
+			dr: F2(
 				function (msg, model) {
 					return _Utils_Tuple2(
-						A2(impl.aB, msg, model),
+						A2(impl.dr, msg, model),
 						elm$core$Platform$Cmd$none);
 				}),
-			aD: impl.aD
+			dt: impl.dt
 		});
 };
 var author$project$Main$main = elm$browser$Browser$sandbox(
-	{at: author$project$Main$init, aB: author$project$Main$update, aD: author$project$Main$view});
+	{dh: author$project$Main$init, dr: author$project$Main$update, dt: author$project$Main$view});
 _Platform_export({'Main':{'init':author$project$Main$main(
 	elm$json$Json$Decode$succeed(0))(0)}});}(this));

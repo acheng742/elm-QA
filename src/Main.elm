@@ -2,7 +2,7 @@ module Main exposing (Msg(..), main, update, view)
 
 import Browser
 import Html exposing (Html, button, div, input, li, p, text, ul)
-import Html.Attributes exposing (value)
+import Html.Attributes exposing (class, value)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -26,7 +26,7 @@ type SomeOtherNumber
 
 init : Model
 init =
-    Model 6 "name"
+    Model 0 "name"
 
 
 type Msg
@@ -62,16 +62,18 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ button [ onClick Decrement ] [ text "-" ]
+    div [ class "container mt-3" ]
+        [ button [ class "btn btn-secondary", onClick Decrement ] [ text "-" ]
         , div [] [ text (String.fromInt model.count) ]
-        , button [ onClick Increment ] [ text "+" ]
-        , input [ value model.firstName, onInput FirstName ] []
+        , button [ class "btn btn-secondary", onClick Increment ] [ text "+" ]
+        , input [ class "list-group mt-3", value model.firstName, onInput FirstName ] []
         , div [] [ text model.firstName ]
         , div []
-            [ p [] [ text "Please choose an answer" ]
-            , ul []
-                [ li [] [ text "Answer 1" ]
+            [ p [ class "mt-3" ] [ text "What's your favorite color? Please choose an answer" ]
+            , ul [ class "list-group" ]
+                [ li [] [ text "Blue" ]
+                , li [] [ text "Yellow" ]
+                , li [] [ text "Red" ]
                 ]
             ]
         ]
