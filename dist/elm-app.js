@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.cg.aj === region.cw.aj)
+	if (region.cg.ai === region.cw.ai)
 	{
-		return 'on line ' + region.cg.aj;
+		return 'on line ' + region.cg.ai;
 	}
-	return 'on lines ' + region.cg.aj + ' through ' + region.cw.aj;
+	return 'on lines ' + region.cg.ai + ' through ' + region.cw.ai;
 }
 
 
@@ -3923,7 +3923,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.dv,
 		impl.dt,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.aq && impl.aq(sendToApp)
+			var divertHrefToApp = impl.ap && impl.ap(sendToApp)
 			var view = impl.dx;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -3998,7 +3998,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		aq: function(sendToApp)
+		ap: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4187,7 +4187,7 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		cY: _Browser_getScene(),
+		cX: _Browser_getScene(),
 		c7: {
 			bX: _Browser_window.pageXOffset,
 			bY: _Browser_window.pageYOffset,
@@ -4226,7 +4226,7 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			cY: {
+			cX: {
 				X: node.scrollWidth,
 				N: node.scrollHeight
 			},
@@ -4264,7 +4264,7 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			cY: _Browser_getScene(),
+			cX: _Browser_getScene(),
 			c7: {
 				bX: x,
 				bY: y,
@@ -4311,9 +4311,14 @@ function _Browser_load(url)
 	}));
 }
 var author$project$Main$Model = F3(
-	function (count, firstName, questions) {
-		return {K: count, a_: firstName, cU: questions};
+	function (count, firstName, statementsResponses) {
+		return {K: count, a_: firstName, cZ: statementsResponses};
 	});
+var author$project$Main$Agree = 1;
+var author$project$Main$Disagree = 3;
+var author$project$Main$Neutral = 2;
+var author$project$Main$StronglyAgree = 0;
+var author$project$Main$StronglyDisagree = 4;
 var elm$core$Maybe$Just = function (a) {
 	return {$: 0, a: a};
 };
@@ -4398,28 +4403,28 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0;
 	return elm$core$Dict$keys(dict);
 };
-var author$project$Main$initialQuestionAnswer = _List_fromArray(
+var author$project$Main$initialStatementResponses = _List_fromArray(
 	[
 		{
-		_: _List_fromArray(
-			['Blue', 'Yellow', 'Red', 'Purple']),
-		ao: 'What is your favorite color?',
-		ap: elm$core$Maybe$Nothing
+		an: _List_fromArray(
+			[0, 1, 2, 3, 4]),
+		ao: elm$core$Maybe$Nothing,
+		aq: 'My team can clearly articulate their goals'
 	},
 		{
-		_: _List_fromArray(
-			['Hamburgers', 'Chili', 'Pizza']),
-		ao: 'What is your favorite food?',
-		ap: elm$core$Maybe$Just('Hamburgers')
+		an: _List_fromArray(
+			[0, 1, 2, 3, 4]),
+		ao: elm$core$Maybe$Just(2),
+		aq: 'My team feels recognized for their accomplishments'
 	},
 		{
-		_: _List_fromArray(
-			['Hawaii', 'Fiji', 'Virgin Islands']),
-		ao: 'Where is your dream vacation?',
-		ap: elm$core$Maybe$Nothing
+		an: _List_fromArray(
+			[0, 1, 2, 3, 4]),
+		ao: elm$core$Maybe$Nothing,
+		aq: 'All team members have personal development plans and see regular progress towards their goals'
 	}
 	]);
-var author$project$Main$init = A3(author$project$Main$Model, 0, 'name', author$project$Main$initialQuestionAnswer);
+var author$project$Main$init = A3(author$project$Main$Model, 0, 'name', author$project$Main$initialStatementResponses);
 var elm$core$Basics$add = _Basics_add;
 var elm$core$Basics$sub = _Basics_sub;
 var author$project$Main$update = F2(
@@ -4448,6 +4453,20 @@ var author$project$Main$FirstName = function (a) {
 	return {$: 2, a: a};
 };
 var author$project$Main$Increment = {$: 0};
+var author$project$Main$showResponse = function (response) {
+	switch (response) {
+		case 0:
+			return 'Strongly Agree';
+		case 1:
+			return 'Agree';
+		case 2:
+			return 'Neutral';
+		case 3:
+			return 'Disagree';
+		default:
+			return 'Strongly Disagree';
+	}
+};
 var elm$core$Basics$append = _Utils_append;
 var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Basics$identity = function (x) {
@@ -4867,12 +4886,12 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var author$project$Main$renderChoice = F2(
-	function (choice, maybeSelectedChoice) {
+var author$project$Main$renderResponse = F2(
+	function (response, maybeSelectedResponse) {
 		var maybeActive = function () {
-			if (!maybeSelectedChoice.$) {
-				var selectedChoice = maybeSelectedChoice.a;
-				return _Utils_eq(selectedChoice, choice) ? ' active' : '';
+			if (!maybeSelectedResponse.$) {
+				var selectedResponse = maybeSelectedResponse.a;
+				return _Utils_eq(selectedResponse, response) ? ' active' : '';
 			} else {
 				return '';
 			}
@@ -4885,7 +4904,8 @@ var author$project$Main$renderChoice = F2(
 				]),
 			_List_fromArray(
 				[
-					elm$html$Html$text(choice)
+					elm$html$Html$text(
+					author$project$Main$showResponse(response))
 				]));
 	});
 var elm$core$List$foldrHelper = F4(
@@ -4960,7 +4980,7 @@ var elm$core$List$map = F2(
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$h3 = _VirtualDom_node('h3');
 var elm$html$Html$ul = _VirtualDom_node('ul');
-var author$project$Main$renderQuestion = function (questionAnswer) {
+var author$project$Main$renderStatement = function (statementResponse) {
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
@@ -4974,7 +4994,7 @@ var author$project$Main$renderQuestion = function (questionAnswer) {
 					]),
 				_List_fromArray(
 					[
-						elm$html$Html$text(questionAnswer.ao)
+						elm$html$Html$text(statementResponse.aq)
 					])),
 				A2(
 				elm$html$Html$ul,
@@ -4984,10 +5004,10 @@ var author$project$Main$renderQuestion = function (questionAnswer) {
 					]),
 				A2(
 					elm$core$List$map,
-					function (choice) {
-						return A2(author$project$Main$renderChoice, choice, questionAnswer.ap);
+					function (response) {
+						return A2(author$project$Main$renderResponse, response, statementResponse.ao);
 					},
-					questionAnswer._))
+					statementResponse.an))
 			]));
 };
 var elm$html$Html$button = _VirtualDom_node('button');
@@ -5048,7 +5068,7 @@ var author$project$Main$view = function (model) {
 		elm$html$Html$div,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$class('container my-3')
+				elm$html$Html$Attributes$class('container my-5')
 			]),
 		_Utils_ap(
 			_List_fromArray(
@@ -5100,7 +5120,7 @@ var author$project$Main$view = function (model) {
 							elm$html$Html$text(model.a_)
 						]))
 				]),
-			A2(elm$core$List$map, author$project$Main$renderQuestion, model.cU)));
+			A2(elm$core$List$map, author$project$Main$renderStatement, model.cZ)));
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);

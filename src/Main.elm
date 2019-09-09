@@ -13,35 +13,35 @@ main =
 type alias Model =
     { count : Int
     , firstName : String
-    , questions : List QuestionAnswer
+    , statementsResponses : List StatementResponse
     }
 
 
-type alias QuestionAnswer =
-    { question : String
-    , choices : List String
-    , selectedChoice : Maybe String
+type alias StatementResponse =
+    { statement : String
+    , responses : List Response
+    , selectedResponse : Maybe Response
     }
 
 
 init : Model
 init =
-    Model 0 "name" initialQuestionAnswer
+    Model 0 "name" initialStatementResponses
 
 
-initialQuestionAnswer : List QuestionAnswer
-initialQuestionAnswer =
-    [ { question = "What is your favorite color?"
-      , choices = [ "Blue", "Yellow", "Red", "Purple" ]
-      , selectedChoice = Nothing
+initialStatementResponses : List StatementResponse
+initialStatementResponses =
+    [ { statement = "My team can clearly articulate their goals"
+      , responses = [ StronglyAgree, Agree, Neutral, Disagree, StronglyDisagree ]
+      , selectedResponse = Nothing
       }
-    , { question = "What is your favorite food?"
-      , choices = [ "Hamburgers", "Chili", "Pizza" ]
-      , selectedChoice = Just "Hamburgers"
+    , { statement = "My team feels recognized for their accomplishments"
+      , responses = [ StronglyAgree, Agree, Neutral, Disagree, StronglyDisagree ]
+      , selectedResponse = Just Neutral
       }
-    , { question = "Where is your dream vacation?"
-      , choices = [ "Hawaii", "Fiji", "Virgin Islands" ]
-      , selectedChoice = Nothing
+    , { statement = "All team members have personal development plans and see regular progress towards their goals"
+      , responses = [ StronglyAgree, Agree, Neutral, Disagree, StronglyDisagree ]
+      , selectedResponse = Nothing
       }
     ]
 
@@ -50,6 +50,33 @@ type Msg
     = Increment
     | Decrement
     | FirstName String
+
+
+type Response
+    = StronglyAgree
+    | Agree
+    | Neutral
+    | Disagree
+    | StronglyDisagree
+
+
+showResponse : Response -> String
+showResponse response =
+    case response of
+        StronglyAgree ->
+            "Strongly Agree"
+
+        Agree ->
+            "Agree"
+
+        Neutral ->
+            "Neutral"
+
+        Disagree ->
+            "Disagree"
+
+        StronglyDisagree ->
+            "Strongly Disagree"
 
 
 update : Msg -> Model -> Model
@@ -79,14 +106,14 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "container my-3" ]
+    div [ class "container my-5" ]
         ([ button [ class "btn btn-secondary", onClick Decrement ] [ text "-" ]
          , div [] [ text (String.fromInt model.count) ]
          , button [ class "btn btn-secondary", onClick Increment ] [ text "+" ]
          , input [ class "list-group mt-3", value model.firstName, onInput FirstName ] []
          , div [] [ text model.firstName ]
          ]
-            ++ List.map renderQuestion model.questions
+            ++ List.map renderStatement model.statementsResponses
         )
 
 
@@ -94,22 +121,22 @@ view model =
 -- View Helpers
 
 
-renderQuestion : QuestionAnswer -> Html Msg
-renderQuestion questionAnswer =
+renderStatement : StatementResponse -> Html Msg
+renderStatement statementResponse =
     div []
-        [ h3 [ class "mt-3" ] [ text questionAnswer.question ]
+        [ h3 [ class "mt-3" ] [ text statementResponse.statement ]
         , ul [ class "list-group" ]
-            (List.map (\choice -> renderChoice choice questionAnswer.selectedChoice) questionAnswer.choices)
+            (List.map (\response -> renderResponse response statementResponse.selectedResponse) statementResponse.responses)
         ]
 
 
-renderChoice : String -> Maybe String -> Html Msg
-renderChoice choice maybeSelectedChoice =
+renderResponse : Response -> Maybe Response -> Html Msg
+renderResponse response maybeSelectedResponse =
     let
         maybeActive =
-            case maybeSelectedChoice of
-                Just selectedChoice ->
-                    if selectedChoice == choice then
+            case maybeSelectedResponse of
+                Just selectedResponse ->
+                    if selectedResponse == response then
                         " active"
 
                     else
@@ -118,4 +145,4 @@ renderChoice choice maybeSelectedChoice =
                 Nothing ->
                     ""
     in
-    li [ class ("list-group-item list-group-item-action" ++ maybeActive) ] [ text choice ]
+    li [ class ("list-group-item list-group-item-action" ++ maybeActive) ] [ text (showResponse response) ]
