@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.cd.ai === region.ct.ai)
+	if (region.cf.ai === region.cv.ai)
 	{
-		return 'on line ' + region.cd.ai;
+		return 'on line ' + region.cf.ai;
 	}
-	return 'on lines ' + region.cd.ai + ' through ' + region.ct.ai;
+	return 'on lines ' + region.cf.ai + ' through ' + region.cv.ai;
 }
 
 
@@ -2660,8 +2660,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		t: func(record.t),
-		cf: record.cf,
-		ca: record.ca
+		ch: record.ch,
+		cb: record.cb
 	}
 });
 
@@ -2930,10 +2930,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.t;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.cf;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ch;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.ca) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.cb) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -4014,9 +4014,9 @@ function _Browser_application(impl)
 					var next = elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.cP === next.cP
-							&& curr.cw === next.cw
-							&& curr.cL.a === next.cL.a
+							&& curr.cR === next.cR
+							&& curr.cy === next.cy
+							&& curr.cN.a === next.cN.a
 						)
 							? elm$browser$Browser$Internal(next)
 							: elm$browser$Browser$External(href)
@@ -4187,10 +4187,10 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		cV: _Browser_getScene(),
+		cX: _Browser_getScene(),
 		c7: {
-			bU: _Browser_window.pageXOffset,
-			bV: _Browser_window.pageYOffset,
+			bV: _Browser_window.pageXOffset,
+			bW: _Browser_window.pageYOffset,
 			X: _Browser_doc.documentElement.clientWidth,
 			N: _Browser_doc.documentElement.clientHeight
 		}
@@ -4226,13 +4226,13 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			cV: {
+			cX: {
 				X: node.scrollWidth,
 				N: node.scrollHeight
 			},
 			c7: {
-				bU: node.scrollLeft,
-				bV: node.scrollTop,
+				bV: node.scrollLeft,
+				bW: node.scrollTop,
 				X: node.clientWidth,
 				N: node.clientHeight
 			}
@@ -4264,16 +4264,16 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			cV: _Browser_getScene(),
+			cX: _Browser_getScene(),
 			c7: {
-				bU: x,
-				bV: y,
+				bV: x,
+				bW: y,
 				X: _Browser_doc.documentElement.clientWidth,
 				N: _Browser_doc.documentElement.clientHeight
 			},
 			de: {
-				bU: x + rect.left,
-				bV: y + rect.top,
+				bV: x + rect.left,
+				bW: y + rect.top,
 				X: rect.width,
 				N: rect.height
 			}
@@ -4312,11 +4312,11 @@ function _Browser_load(url)
 }
 var author$project$Main$Model = F3(
 	function (count, firstName, statementsResponses) {
-		return {K: count, aX: firstName, cZ: statementsResponses};
+		return {K: count, aX: firstName, bJ: statementsResponses};
 	});
 var author$project$Main$StatementResponse = F3(
 	function (statement, responses, selectedResponse) {
-		return {cT: responses, cX: selectedResponse, cY: statement};
+		return {cV: responses, ce: selectedResponse, cZ: statement};
 	});
 var elm$core$Basics$EQ = 1;
 var elm$core$Basics$LT = 0;
@@ -4515,7 +4515,159 @@ var author$project$Main$init = A3(
 	0,
 	'name',
 	A2(author$project$Main$initialStatementResponses, author$project$Main$listOfStatements, author$project$Main$listOfRepsonses));
+var elm$core$Basics$append = _Utils_append;
 var elm$core$Basics$sub = _Basics_sub;
+var elm$core$Basics$le = _Utils_le;
+var elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2(elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return elm$core$List$reverse(
+			A3(elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _n0 = _Utils_Tuple2(n, list);
+			_n0$1:
+			while (true) {
+				_n0$5:
+				while (true) {
+					if (!_n0.b.b) {
+						return list;
+					} else {
+						if (_n0.b.b.b) {
+							switch (_n0.a) {
+								case 1:
+									break _n0$1;
+								case 2:
+									var _n2 = _n0.b;
+									var x = _n2.a;
+									var _n3 = _n2.b;
+									var y = _n3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_n0.b.b.b.b) {
+										var _n4 = _n0.b;
+										var x = _n4.a;
+										var _n5 = _n4.b;
+										var y = _n5.a;
+										var _n6 = _n5.b;
+										var z = _n6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _n0$5;
+									}
+								default:
+									if (_n0.b.b.b.b && _n0.b.b.b.b.b) {
+										var _n7 = _n0.b;
+										var x = _n7.a;
+										var _n8 = _n7.b;
+										var y = _n8.a;
+										var _n9 = _n8.b;
+										var z = _n9.a;
+										var _n10 = _n9.b;
+										var w = _n10.a;
+										var tl = _n10.b;
+										return (ctr > 1000) ? A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A2(elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											elm$core$List$cons,
+											x,
+											A2(
+												elm$core$List$cons,
+												y,
+												A2(
+													elm$core$List$cons,
+													z,
+													A2(
+														elm$core$List$cons,
+														w,
+														A3(elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _n0$5;
+									}
+							}
+						} else {
+							if (_n0.a === 1) {
+								break _n0$1;
+							} else {
+								break _n0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _n1 = _n0.b;
+			var x = _n1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var elm$core$List$take = F2(
+	function (n, list) {
+		return A3(elm$core$List$takeFast, 0, n, list);
+	});
+var elm$core$Maybe$Just = function (a) {
+	return {$: 0, a: a};
+};
 var author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -4536,8 +4688,34 @@ var author$project$Main$update = F2(
 					{aX: input});
 				return updatedModel;
 			default:
-				var response = msg.a;
-				return model;
+				var index = msg.a;
+				var response = msg.b;
+				var responsesToUpdate = model.bJ;
+				var includesIndex = A2(elm$core$List$drop, index, responsesToUpdate);
+				var responseToChangeInList = A2(elm$core$List$take, 1, includesIndex);
+				var updatedResponseInList = function () {
+					if (responseToChangeInList.b) {
+						var responseToChange = responseToChangeInList.a;
+						return _List_fromArray(
+							[
+								_Utils_update(
+								responseToChange,
+								{
+									ce: elm$core$Maybe$Just(response)
+								})
+							]);
+					} else {
+						return _List_Nil;
+					}
+				}();
+				var beforeIndex = A2(elm$core$List$take, index, responsesToUpdate);
+				var afterIndex = A2(elm$core$List$drop, 1, includesIndex);
+				var updatedResponseList = _Utils_ap(
+					beforeIndex,
+					_Utils_ap(updatedResponseInList, afterIndex));
+				return _Utils_update(
+					model,
+					{bJ: updatedResponseList});
 		}
 	});
 var author$project$Main$Decrement = {$: 1};
@@ -4545,9 +4723,10 @@ var author$project$Main$FirstName = function (a) {
 	return {$: 2, a: a};
 };
 var author$project$Main$Increment = {$: 0};
-var author$project$Main$UserSelectedResponse = function (a) {
-	return {$: 3, a: a};
-};
+var author$project$Main$UserSelectedResponse = F2(
+	function (a, b) {
+		return {$: 3, a: a, b: b};
+	});
 var author$project$Main$showResponse = function (response) {
 	switch (response) {
 		case 0:
@@ -4562,7 +4741,6 @@ var author$project$Main$showResponse = function (response) {
 			return 'Strongly Disagree';
 	}
 };
-var elm$core$Basics$append = _Utils_append;
 var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Basics$identity = function (x) {
 	return x;
@@ -4708,7 +4886,6 @@ var elm$core$Array$initializeHelp = F5(
 			}
 		}
 	});
-var elm$core$Basics$le = _Utils_le;
 var elm$core$Basics$remainderBy = _Basics_remainderBy;
 var elm$core$Array$initialize = F2(
 	function (len, fn) {
@@ -4721,9 +4898,6 @@ var elm$core$Array$initialize = F2(
 			return A5(elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
-var elm$core$Maybe$Just = function (a) {
-	return {$: 0, a: a};
-};
 var elm$core$Result$Err = function (a) {
 	return {$: 1, a: a};
 };
@@ -4978,8 +5152,8 @@ var elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		elm$json$Json$Decode$succeed(msg));
 };
-var author$project$Main$renderResponse = F2(
-	function (response, maybeSelectedResponse) {
+var author$project$Main$renderResponse = F3(
+	function (index, response, maybeSelectedResponse) {
 		var maybeActive = function () {
 			if (!maybeSelectedResponse.$) {
 				var selectedResponse = maybeSelectedResponse.a;
@@ -4994,7 +5168,7 @@ var author$project$Main$renderResponse = F2(
 				[
 					elm$html$Html$Attributes$class('list-group-item list-group-item-action' + maybeActive),
 					elm$html$Html$Events$onClick(
-					author$project$Main$UserSelectedResponse(response))
+					A2(author$project$Main$UserSelectedResponse, index, response))
 				]),
 			_List_fromArray(
 				[
@@ -5005,36 +5179,37 @@ var author$project$Main$renderResponse = F2(
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$h3 = _VirtualDom_node('h3');
 var elm$html$Html$ul = _VirtualDom_node('ul');
-var author$project$Main$renderStatement = function (statementResponse) {
-	return A2(
-		elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$h3,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('mt-3')
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text(statementResponse.cY)
-					])),
-				A2(
-				elm$html$Html$ul,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('list-group')
-					]),
-				A2(
-					elm$core$List$map,
-					function (response) {
-						return A2(author$project$Main$renderResponse, response, statementResponse.cX);
-					},
-					statementResponse.cT))
-			]));
-};
+var author$project$Main$renderStatement = F2(
+	function (index, statementResponse) {
+		return A2(
+			elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$h3,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('mt-3')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(statementResponse.cZ)
+						])),
+					A2(
+					elm$html$Html$ul,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('list-group')
+						]),
+					A2(
+						elm$core$List$map,
+						function (response) {
+							return A3(author$project$Main$renderResponse, index, response, statementResponse.ce);
+						},
+						statementResponse.cV))
+				]));
+	});
 var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
@@ -5128,7 +5303,7 @@ var author$project$Main$view = function (model) {
 							elm$html$Html$text(model.aX)
 						]))
 				]),
-			A2(elm$core$List$map, author$project$Main$renderStatement, model.cZ)));
+			A2(elm$core$List$indexedMap, author$project$Main$renderStatement, model.bJ)));
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
@@ -5250,7 +5425,7 @@ var elm$core$String$contains = _String_contains;
 var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {cv: fragment, cw: host, cJ: path, cL: port_, cP: protocol, cQ: query};
+		return {cx: fragment, cy: host, cL: path, cN: port_, cR: protocol, cS: query};
 	});
 var elm$url$Url$chompBeforePath = F5(
 	function (protocol, path, params, frag, str) {

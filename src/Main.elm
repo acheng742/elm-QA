@@ -55,7 +55,7 @@ type Msg
     = Increment
     | Decrement
     | FirstName String
-    | UserSelectedResponse Response
+    | UserSelectedResponse Int Response
 
 
 type Response
@@ -109,8 +109,35 @@ update msg model =
             in
             updatedModel
 
-        UserSelectedResponse response ->
-            model
+        UserSelectedResponse index response ->
+            let
+                responsesToUpdate =
+                    model.statementsResponses
+
+                beforeIndex =
+                    List.take index responsesToUpdate
+
+                includesIndex =
+                    List.drop index responsesToUpdate
+
+                responseToChangeInList =
+                    List.take 1 includesIndex
+
+                afterIndex =
+                    List.drop 1 includesIndex
+
+                updatedResponseInList =
+                    case responseToChangeInList of
+                        responseToChange :: _ ->
+                            [ { responseToChange | selectedResponse = Just response } ]
+
+                        _ ->
+                            []
+
+                updatedResponseList =
+                    beforeIndex ++ updatedResponseInList ++ afterIndex
+            in
+            { model | statementsResponses = updatedResponseList }
 
 
 view : Model -> Html Msg
@@ -122,7 +149,7 @@ view model =
          , input [ class "list-group mt-3", value model.firstName, onInput FirstName ] []
          , div [] [ text model.firstName ]
          ]
-            ++ List.map renderStatement model.statementsResponses
+            ++ List.indexedMap renderStatement model.statementsResponses
         )
 
 
@@ -130,17 +157,17 @@ view model =
 -- View Helpers
 
 
-renderStatement : StatementResponse -> Html Msg
-renderStatement statementResponse =
+renderStatement : Int -> StatementResponse -> Html Msg
+renderStatement index statementResponse =
     div []
         [ h3 [ class "mt-3" ] [ text statementResponse.statement ]
         , ul [ class "list-group" ]
-            (List.map (\response -> renderResponse response statementResponse.selectedResponse) statementResponse.responses)
+            (List.map (\response -> renderResponse index response statementResponse.selectedResponse) statementResponse.responses)
         ]
 
 
-renderResponse : Response -> Maybe Response -> Html Msg
-renderResponse response maybeSelectedResponse =
+renderResponse : Int -> Response -> Maybe Response -> Html Msg
+renderResponse index response maybeSelectedResponse =
     let
         maybeActive =
             case maybeSelectedResponse of
@@ -156,7 +183,7 @@ renderResponse response maybeSelectedResponse =
     in
     li
         [ class ("list-group-item list-group-item-action" ++ maybeActive)
-        , onClick (UserSelectedResponse response)
+        , onClick (UserSelectedResponse index response)
         ]
         [ text (showResponse response)
         ]
