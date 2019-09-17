@@ -26,30 +26,36 @@ type alias StatementResponse =
 
 init : Model
 init =
-    Model 0 "name" initialStatementResponses
+    Model 0 "name" (initialStatementResponses listOfStatements listOfRepsonses)
 
 
-initialStatementResponses : List StatementResponse
-initialStatementResponses =
-    [ { statement = "My team can clearly articulate their goals"
-      , responses = [ StronglyAgree, Agree, Neutral, Disagree, StronglyDisagree ]
-      , selectedResponse = Nothing
-      }
-    , { statement = "My team feels recognized for their accomplishments"
-      , responses = [ StronglyAgree, Agree, Neutral, Disagree, StronglyDisagree ]
-      , selectedResponse = Just Neutral
-      }
-    , { statement = "All team members have personal development plans and see regular progress towards their goals"
-      , responses = [ StronglyAgree, Agree, Neutral, Disagree, StronglyDisagree ]
-      , selectedResponse = Nothing
-      }
+listOfRepsonses : List Response
+listOfRepsonses =
+    [ StronglyAgree, Agree, Neutral, Disagree, StronglyDisagree ]
+
+
+listOfStatements : List String
+listOfStatements =
+    [ "My team can clearly articulate their goals"
+    , "My team feels recognized for their accomplishments"
+    , "All team members have personal development plans and see regular progress towards their goals"
     ]
+
+
+initialStatementResponses : List String -> List Response -> List StatementResponse
+initialStatementResponses statements responses =
+    List.map
+        (\statement ->
+            StatementResponse statement responses Nothing
+        )
+        statements
 
 
 type Msg
     = Increment
     | Decrement
     | FirstName String
+    | UserSelectedResponse Response
 
 
 type Response
@@ -103,6 +109,9 @@ update msg model =
             in
             updatedModel
 
+        UserSelectedResponse response ->
+            model
+
 
 view : Model -> Html Msg
 view model =
@@ -145,4 +154,9 @@ renderResponse response maybeSelectedResponse =
                 Nothing ->
                     ""
     in
-    li [ class ("list-group-item list-group-item-action" ++ maybeActive) ] [ text (showResponse response) ]
+    li
+        [ class ("list-group-item list-group-item-action" ++ maybeActive)
+        , onClick (UserSelectedResponse response)
+        ]
+        [ text (showResponse response)
+        ]
