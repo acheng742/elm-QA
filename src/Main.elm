@@ -11,9 +11,7 @@ main =
 
 
 type alias Model =
-    { count : Int
-    , firstName : String
-    , statementsResponses : List StatementResponse
+    { statementsResponses : List StatementResponse
     }
 
 
@@ -26,7 +24,7 @@ type alias StatementResponse =
 
 init : Model
 init =
-    Model 0 "name" (initialStatementResponses listOfStatements listOfRepsonses)
+    Model (initialStatementResponses listOfStatements listOfRepsonses)
 
 
 listOfRepsonses : List Response
@@ -52,10 +50,7 @@ initialStatementResponses statements responses =
 
 
 type Msg
-    = Increment
-    | Decrement
-    | FirstName String
-    | UserSelectedResponse Int Response
+    = UserSelectedResponse Int Response
 
 
 type Response
@@ -88,27 +83,6 @@ showResponse response =
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Increment ->
-            let
-                newModel =
-                    { model | count = model.count + 1 }
-            in
-            newModel
-
-        Decrement ->
-            let
-                newModel =
-                    { model | count = model.count - 1 }
-            in
-            newModel
-
-        FirstName input ->
-            let
-                updatedModel =
-                    { model | firstName = input }
-            in
-            updatedModel
-
         UserSelectedResponse index response ->
             let
                 responsesToUpdate =
@@ -143,14 +117,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class "container my-5" ]
-        ([ button [ class "btn btn-secondary", onClick Decrement ] [ text "-" ]
-         , div [] [ text (String.fromInt model.count) ]
-         , button [ class "btn btn-secondary", onClick Increment ] [ text "+" ]
-         , input [ class "list-group mt-3", value model.firstName, onInput FirstName ] []
-         , div [] [ text model.firstName ]
-         ]
-            ++ List.indexedMap renderStatement model.statementsResponses
-        )
+        (List.indexedMap renderStatement model.statementsResponses)
 
 
 
